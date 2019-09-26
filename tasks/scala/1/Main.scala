@@ -1,5 +1,4 @@
 package recfun
-import scala.util.matching.Regex
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -49,6 +48,12 @@ object Main {
    * 2 and 3: 2+3.
    */
   def countChange(money: Int, coins: List[Int]): Int = {
-    0
+    if (money == 0) {
+      1;
+    } else if ((money < 0) || coins.isEmpty) {
+      0;
+    } else {
+      countChange(money, coins.tail) + countChange(money - coins.head, coins)
+    }
   }
 }

@@ -1,5 +1,5 @@
 package recfun
-import common._
+import scala.util.matching.Regex
 
 object Main {
   def main(args: Array[String]): Unit = {
@@ -16,9 +16,9 @@ object Main {
    */
   def pascal(c: Int, r: Int): Int = {
     if ((c == 0) || (c == r)) {
-      return 1;
+      1
     } else {
-      return pascal(c, r - 1) + pascal(c - 1, r - 1)
+      pascal(c, r - 1) + pascal(c - 1, r - 1)
     }
   }
 
@@ -26,7 +26,19 @@ object Main {
    * Exercise 2 Parentheses Balancing
    */
   def balance(chars: List[Char]): Boolean = {
-    return false 
+    def check(chars: List[Char], count: Int): Boolean = {
+      if (chars.isEmpty) {
+        count == 0
+      } else if (chars.head == '(') {
+        check(chars.tail, count + 1)
+      } else if (chars.head == ')') {
+        (count > 0) && check(chars.tail, count - 1)
+      } else {
+        check(chars.tail, count)
+      }
+    }
+
+    check(chars, 0)
   }
 
   /**
@@ -37,6 +49,6 @@ object Main {
    * 2 and 3: 2+3.
    */
   def countChange(money: Int, coins: List[Int]): Int = {
-    return 0
+    0
   }
 }

@@ -1,5 +1,6 @@
 package recfun
-import common._
+
+import scala.collection.mutable.ListBuffer
 
 object Main {
   def main(args: Array[String]) {
@@ -9,12 +10,29 @@ object Main {
         print(pascal(col, row) + " ")
       println()
     }
+
+    println("\nParentheses Balancing ")
+    println(balance("()(())()".toCharArray.toList))
+
+
+    println("\nCounting Change")
+    print(countChange(5, List(1, 2, 3)))
+
   }
 
   /**
    * Exercise 1
    */
   def pascal(c: Int, r: Int): Int = {
+    if (c < 0 || r < 0 || c > r) {
+      throw new IllegalArgumentException("Invalid arguments")
+    }
+
+    if (c == 0 || c == r) {
+      1
+    } else {
+      pascal(c - 1, r - 1) + pascal(c, r - 1)
+    }
 
   }
 
@@ -22,7 +40,29 @@ object Main {
    * Exercise 2 Parentheses Balancing
    */
   def balance(chars: List[Char]): Boolean = {
-   
+
+    def balanceStack(chars: List[Char], stack: ListBuffer[Char]): ListBuffer[Char] = {
+      if (chars.isEmpty) {
+        return stack
+      }
+
+      if (chars.head == '(') {
+        stack.addOne('(')
+      } else if (chars.head == ')') {
+        if (stack.isEmpty) {
+          stack.addOne(')')
+          return stack
+        } else if (stack.last == '(') {
+          stack.remove(stack.length - 1)
+        }
+      }
+
+      balanceStack(chars.tail, stack)
+
+    }
+
+    balanceStack(chars, ListBuffer()).isEmpty
+
   }
 
   /**
@@ -34,5 +74,16 @@ object Main {
    */
   def countChange(money: Int, coins: List[Int]): Int = {
 
+    if (coins.contains(0)) {
+      throw new IllegalArgumentException("coins can not contain 0")
+    }
+
+    if (money == 0) {
+      1
+    } else if ((money < 0) || coins.isEmpty) {
+      0
+    } else {
+      countChange(money, coins.tail) + countChange(money - coins.head, coins)
+    }
   }
 }

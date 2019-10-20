@@ -23,32 +23,30 @@ object Main {
   }
 
   def pascal(c: Int, r: Int): Int = {
-    var rFact:Int = 1
-    for (i <- 1 to r)
-      rFact *= i
-    var cFact:Int = 1
-    for (i <- 1 to c)
-      cFact *= i
-    var rSubCFact = 1
-    for (i <- 1 to r - c)
-      rSubCFact *= i
-    rFact/(cFact * rSubCFact)
+    def factorial(x: Int): Int = {
+      if (x != 0) return x * factorial(x - 1) else {
+        return 1
+      }
+    }
+    factorial(r)/(factorial(c) * factorial(r - c))
   }
 
   def balance(chars: List[Char]): Boolean = {
-    var count:Int = 0
-    var tempList:List[Char] = chars
-    for (i <- 1 to chars.length) {
-      count += (tempList.head match {
-        case '(' => 1
-        case ')' => -1
-        case _ => 0
-      })
-      if (count < 0) return false
-      tempList = tempList.tail
+    def countOfParentheses(list: List[Char], count: Int, isBalanced: Boolean): (Boolean, Int) = {
+      if (count < 0) return (false, count)
+      if (list.isEmpty) {
+        return (isBalanced, count)
+      }
+      list.head match {
+        case '(' => countOfParentheses(list.tail, count + 1, isBalanced)
+        case ')' => countOfParentheses(list.tail, count - 1, isBalanced)
+        case _ => countOfParentheses(list.tail, count, isBalanced)
+      }
     }
-    if (count != 0) false
-    else true
+    if (countOfParentheses(chars, 0, true) == (true, 0)) {
+      return true
+    }
+    else false
   }
 
   def countChange(money: Int, coins: List[Int]): Int = {

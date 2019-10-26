@@ -12,31 +12,34 @@ object Main {
   }
 
   /**
-    * Exercise 1
-    */
+   * Exercise 1
+   */
   def pascal(c: Int, r: Int): Int = {
-    if (r == 0 || c == r) 1 else (pascal(c - 1, r - 1) + pascal(c - 1, r))
+    if (c == 0 || c == r) 1 else (pascal(c - 1, r - 1) + pascal(c, r - 1))
   }
 
   /**
-    * Exercise 2 Parentheses Balancing
-    */
+   * Exercise 2 Parentheses Balancing
+   */
   def balance(chars: List[Char]): Boolean = {
-    var c = 0
-    for (i <- 0 to chars.length - 1) {
-      if (chars(i) == '(') c = c + 1 else if (chars(i) == ')') c = c - 1
-      if (c < 0) return false
+    def parser(chars: List[Char], counter: Int): Boolean = (chars, counter) match {
+      case (Nil, 0)           => true
+      case (Nil, _)           => false
+      case (_, b) if b < 0    => false
+      case ('(' :: tail, b)   => parser(tail, b + 1)
+      case (')' :: tail, b)   => parser(tail, b - 1)
+      case (_ :: tail, b)     => parser(tail, counter)
     }
-    return c == 0
+    parser(chars, 0)
   }
 
   /**
-    * Exercise 3 Counting Change
-    * Write a recursive function that counts how many different ways you can make
-    * change for an amount, given a list of coin denominations. For example,
-    * there is 1 way to give change for 5 if you have coins with denomiation
-    * 2 and 3: 2+3.
-    */
+   * Exercise 3 Counting Change
+   * Write a recursive function that counts how many different ways you can make
+   * change for an amount, given a list of coin denominations. For example,
+   * there is 1 way to give change for 5 if you have coins with denomiation
+   * 2 and 3: 2+3.
+   */
   def countChange(money: Int, coins: List[Int]): Int = {
     if (money < 0 || coins.isEmpty) 0
     else if (money == 0) 1
